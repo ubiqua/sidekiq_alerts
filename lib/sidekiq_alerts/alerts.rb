@@ -32,7 +32,7 @@ module SidekiqAlerts
     # Send the sentry report
     message = "[SidekiqLatency][#{APP_NAME}] - "
     message += "Latency for queue #{queue.name} exceeded #{MAX_LATENCY} with #{queue.latency}"
-    Sidekiq.logger.error message
+    puts message
     Raven.capture_message(message, tags: { type: 'sidekiq' })
   end
 
@@ -40,7 +40,7 @@ module SidekiqAlerts
     # Send the sentry report
     message = "[SidekiqLatency][#{APP_NAME}] - "
     message += "Retry count of #{current_count} exceeded maximun threshold of #{MAX_RETRY_COUNT}"
-    Sidekiq.logger.error message
+    puts message
     Raven.capture_message(message, tags: { type: 'sidekiq' })
   end
 end
