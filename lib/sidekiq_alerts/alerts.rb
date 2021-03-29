@@ -8,7 +8,10 @@ module SidekiqAlerts
 
   def self.check_latency
     # Get the list of queue names to check
-    queue_names = QUEUES.split(',').map { |name| name.strip! }
+    queue_names = QUEUES.split(',').map { |name| 
+      name.strip! 
+      name
+    }
     # Find the queues we are looking for
     queues = Sidekiq::Queue.all.select { |queue| queue_names.include? queue.name }
 
