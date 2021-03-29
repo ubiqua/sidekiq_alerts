@@ -1,8 +1,9 @@
+require 'raven'
+
 Raven.configure do |config|
   # URL where the events are sent
   config.dsn = ENV['SENTRY_DSN_BACKEND']
   # Filter fields filtered by Rails
-  config.sanitize_fields = Rails.application.config.filter_parameters.map(&:to_s)
   config.ssl_verification = true
   config.environments = %w[ production ]
   # Set version, see application.html.haml
