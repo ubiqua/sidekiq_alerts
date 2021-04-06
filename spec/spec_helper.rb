@@ -1,4 +1,5 @@
 require "bundler/setup"
+require "byebug"
 require "sidekiq_alerts"
 
 RSpec.configure do |config|

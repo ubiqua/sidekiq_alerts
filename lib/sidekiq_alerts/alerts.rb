@@ -8,27 +8,41 @@ module SidekiqAlerts
 
   def self.check_latency
     # Get the list of queue names to check
+    # Find the queues we are looking for
+    queues = get_queues_to_check
+
+    has_queue_over_threshold = false
+    queues.each do |queue|
+      # Check if the latency exceeds the threshold
+      latency = queue.latency
+      if latency > MAX_LATENCY.to_i
+        has_queue_over_threshold = true
+        report_latency(queue)
+      end
+    end
+
+    has_queue_over_threshold
+  end
+
+  def self.get_queues_to_check
+    # Get the list of queue names to check
     queue_names = QUEUES.split(',').map { |name| 
       name.strip! 
       name
     }
     # Find the queues we are looking for
-    queues = Sidekiq::Queue.all.select { |queue| queue_names.include? queue.name }
-
-    queues.each do |queue|
-      # Check if the latency exceeds the threshold
-      latency = queue.latency
-      if latency > MAX_LATENCY.to_i
-        report_latency(queue)
-      end
-    end
+    Sidekiq::Queue.all.select { |queue| queue_names.include? queue.name }
   end
 
+ 
   def self.check_retries
     retry_set = Sidekiq::RetrySet.new
     if retry_set.count > MAX_RETRY_COUNT.to_i
       report_retry_queue(retry_set.count)
+      return true
     end
+
+    false
   end
 
   def self.report_latency(queue)
