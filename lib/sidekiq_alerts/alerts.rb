@@ -21,7 +21,7 @@ module SidekiqAlerts
       end
     end
 
-    has_queue_over_threshold
+    return has_queue_over_threshold
   end
 
   def self.get_queues_to_check
@@ -42,7 +42,7 @@ module SidekiqAlerts
       return true
     end
 
-    false
+    return false
   end
 
   def self.report_latency(queue)
